@@ -1,0 +1,88 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\Code\\TaskForge\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{513389DF-67CB-4DDC-B298-94D1B9397AFB}|src\\TaskForge.Storage\\TaskForge.Storage.csproj|d:\\code\\taskforge\\src\\taskforge.storage\\filetaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{513389DF-67CB-4DDC-B298-94D1B9397AFB}|src\\TaskForge.Storage\\TaskForge.Storage.csproj|solutionrelative:src\\taskforge.storage\\filetaskstorage.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BDA559A6-9AAD-4A36-B0E9-4664AD9386F7}|src\\TaskForge.Core\\TaskForge.Core.csproj|d:\\code\\taskforge\\src\\taskforge.core\\taskforge.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{BDA559A6-9AAD-4A36-B0E9-4664AD9386F7}|src\\TaskForge.Core\\TaskForge.Core.csproj|solutionrelative:src\\taskforge.core\\taskforge.core.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{513389DF-67CB-4DDC-B298-94D1B9397AFB}|src\\TaskForge.Storage\\TaskForge.Storage.csproj|d:\\code\\taskforge\\src\\taskforge.storage\\taskforge.storage.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{513389DF-67CB-4DDC-B298-94D1B9397AFB}|src\\TaskForge.Storage\\TaskForge.Storage.csproj|solutionrelative:src\\taskforge.storage\\taskforge.storage.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BDA559A6-9AAD-4A36-B0E9-4664AD9386F7}|src\\TaskForge.Core\\TaskForge.Core.csproj|d:\\code\\taskforge\\src\\taskforge.core\\taskscheduler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{BDA559A6-9AAD-4A36-B0E9-4664AD9386F7}|src\\TaskForge.Core\\TaskForge.Core.csproj|solutionrelative:src\\taskforge.core\\taskscheduler.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 2,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TaskForge.Core",
+              "DocumentMoniker": "D:\\Code\\TaskForge\\src\\TaskForge.Core\\TaskForge.Core.csproj",
+              "RelativeDocumentMoniker": "src\\TaskForge.Core\\TaskForge.Core.csproj",
+              "ToolTip": "D:\\Code\\TaskForge\\src\\TaskForge.Core\\TaskForge.Core.csproj",
+              "RelativeToolTip": "src\\TaskForge.Core\\TaskForge.Core.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-07T13:45:36.528Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "TaskForge.Storage",
+              "DocumentMoniker": "D:\\Code\\TaskForge\\src\\TaskForge.Storage\\TaskForge.Storage.csproj",
+              "RelativeDocumentMoniker": "src\\TaskForge.Storage\\TaskForge.Storage.csproj",
+              "ToolTip": "D:\\Code\\TaskForge\\src\\TaskForge.Storage\\TaskForge.Storage.csproj",
+              "RelativeToolTip": "src\\TaskForge.Storage\\TaskForge.Storage.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2026-02-07T13:45:29.765Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "FileTaskStorage.cs",
+              "DocumentMoniker": "D:\\Code\\TaskForge\\src\\TaskForge.Storage\\FileTaskStorage.cs",
+              "RelativeDocumentMoniker": "src\\TaskForge.Storage\\FileTaskStorage.cs",
+              "ToolTip": "D:\\Code\\TaskForge\\src\\TaskForge.Storage\\FileTaskStorage.cs",
+              "RelativeToolTip": "src\\TaskForge.Storage\\FileTaskStorage.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAOAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-07T13:44:21.053Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "TaskScheduler.cs",
+              "DocumentMoniker": "D:\\Code\\TaskForge\\src\\TaskForge.Core\\TaskScheduler.cs",
+              "RelativeDocumentMoniker": "src\\TaskForge.Core\\TaskScheduler.cs",
+              "ToolTip": "D:\\Code\\TaskForge\\src\\TaskForge.Core\\TaskScheduler.cs",
+              "RelativeToolTip": "src\\TaskForge.Core\\TaskScheduler.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-07T13:43:54.938Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
