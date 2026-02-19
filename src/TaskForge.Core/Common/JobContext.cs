@@ -5,7 +5,7 @@ namespace TaskForge.Core.Common;
 /// <summary>
 /// 任务执行上下文，包含任务本身、状态、取消令牌和执行信息
 /// </summary>
-public class JobContext
+public record JobContext
 {
     /// <summary>任务 ID</summary>
     public Guid JobId { get; }
@@ -14,7 +14,7 @@ public class JobContext
     public Job Job { get; }
 
     /// <summary>取消令牌，用于任务停止或超时控制</summary>
-    public CancellationToken CancellationToken { get; }
+    public CancellationToken CancellationToken { get; init; }
 
     /// <summary>当前执行尝试次数（可用于重试策略）</summary>
     public int Attempt { get; internal set; } = 0;
@@ -38,7 +38,6 @@ public class JobContext
         CancellationToken = cancellationToken;
         Logger = logger;
     }
-
     /// <summary>
     /// 执行任务核心方法
     /// </summary>

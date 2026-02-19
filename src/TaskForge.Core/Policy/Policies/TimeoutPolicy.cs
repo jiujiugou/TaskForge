@@ -1,4 +1,5 @@
 using System;
+using TaskForge.Core.Common;
 
 namespace TaskForge.Core.Policy;
 
@@ -9,10 +10,14 @@ public class TimeoutPolicy : IJobPolicy
     {
         _timeout = timeout;
     }
-    public async Task ExecuteAsync(Func<CancellationToken, Task> action, CancellationToken token)
+    public async Task ExecuteAsync(JobContext context, JobPipelineDelegate action)
     {
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(token);
-        var task = action(cts.Token);
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken);
+        var timeoutContext = context with
+        {
+            CancellationToken = cts.Token
+        };
+        var task = action(timeoutContext);
         if (await Task.WhenAny(task, Task.Delay(_timeout, cts.Token)) == task)
         {
             // Action completed within timeout

@@ -1,3 +1,5 @@
+using TaskForge.Core.Common;
+
 namespace TaskForge.Core.Policy;
 
 public class ConcurrencyPolicy : IJobPolicy
@@ -9,12 +11,12 @@ public class ConcurrencyPolicy : IJobPolicy
         _semaphore = new SemaphoreSlim(maxConcurrent, maxConcurrent);
     }
 
-    public async Task ExecuteAsync(Func<CancellationToken, Task> action, CancellationToken token)
+    public async Task ExecuteAsync(JobContext context, JobPipelineDelegate action)
     {
-        await _semaphore.WaitAsync(token);
+        await _semaphore.WaitAsync(context.CancellationToken);
         try
         {
-            await action(token);
+            await action(context);
         }
         finally
         {

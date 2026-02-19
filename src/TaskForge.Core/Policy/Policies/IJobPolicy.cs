@@ -10,5 +10,5 @@ public interface IJobPolicy
     /// <param name="action">执行函数</param>
     /// <param name="token">取消令牌</param>
     /// <returns></returns>
-    Task ExecuteAsync(Func<CancellationToken, Task> action, CancellationToken token);
+    Task ExecuteAsync(JobContext context, JobPipelineDelegate action);
 }
