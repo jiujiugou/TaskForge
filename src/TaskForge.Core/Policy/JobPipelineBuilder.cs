@@ -8,19 +8,26 @@ public class JobPipelineBuilder : IJobPipelineBuilder
     private readonly Func<JobContext, Task>? _job;
     public JobPipelineDelegate Build()
     {
-        JobPipelineDelegate pipeline = context => _job(context);
-        foreach (var policy in _policies.Reverse())
+        if (_job == null)
         {
-            var next = pipeline;
-            pipeline = context => policy.ExecuteAsync(context, next);
+            throw new InvalidOperationException("Job must be set before building the pipeline.");
+        }
+
+        JobPipelineDelegate pipeline = context => _job(context);
+        if (_policies != null)
+        {
+            foreach (var policy in _policies.Reverse())
+            {
+                var next = pipeline;
+                pipeline = context => policy.ExecuteAsync(context, next);
+            }
+
         }
         return pipeline;
     }
-
     public IJobPipelineBuilder UsePolicy(IJobPolicy next)
     {
         _policies?.Add(next);
         return this;
     }
-
 }

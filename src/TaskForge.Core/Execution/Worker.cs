@@ -8,7 +8,7 @@ public class Worker : IWorker
     private Task? _runningTask;
     private CancellationTokenSource? _cts;
     private readonly ILogger<Worker>? _logger;
-    public Worker(JobChannel channel, ILogger<Worker>? logger=null)
+    public Worker(JobChannel channel, ILogger<Worker>? logger = null)
     {
         _channel = channel;
         _logger = logger;
@@ -20,6 +20,8 @@ public class Worker : IWorker
     /// <returns></returns>
     public Task StartAsync(CancellationToken token)
     {
+        if (_runningTask != null)
+            return _runningTask;
         _cts = CancellationTokenSource.CreateLinkedTokenSource(token);
         _runningTask = RunAsync(_cts.Token);
         return _runningTask;
@@ -30,14 +32,14 @@ public class Worker : IWorker
     /// <returns></returns>
     public async Task StopAsync()
     {
-        if(_cts != null)
+        if (_cts != null)
         {
             _cts.Cancel();
         }
         if (_runningTask != null)
             await _runningTask;
     }
-    
+
     private async Task RunAsync(CancellationToken token)
     {
         _logger?.LogInformation("Run started");
@@ -47,10 +49,10 @@ public class Worker : IWorker
             {
                 try
                 {
-                    var job = await _channel.DequeueAsync(token);
-                    _logger?.LogDebug("Executing job {JobId}", job.Id);
-                    await RetryPolicyExecutor.ExecuteAsync(job.Execute, token: token);
-                    _logger?.LogDebug("Finished job {JobId}", job.Id);
+                    var jobWrapper = await _channel.DequeueAsync(token);
+                    _logger?.LogDebug("Executing job {JobId}", jobWrapper.Job.Id);
+                    await jobWrapper.pipeline(jobWrapper.context);
+                    _logger?.LogDebug("Finished job {JobId}", jobWrapper.Job.Id);
                 }
                 catch (OperationCanceledException)
                 {

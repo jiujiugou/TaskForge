@@ -1,62 +1,127 @@
+using Microsoft.Extensions.Logging;
+
 namespace TaskForge.Core.Execution;
 
-public class ExecutionEngine : IExecutionEngine
+public class ExecutionEngine : IExecutionEngine, IAsyncDisposable
 {
     private readonly JobChannel _channel;
     private readonly WorkerPool _pool;
     private CancellationTokenSource? _cts;
-    private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-
-    public ExecutionEngine(int workerCount = 4, int queueCapacity = 100)
+    private readonly ILogger<ExecutionEngine> _logger;
+    private readonly SemaphoreSlim _lifecycleLock = new SemaphoreSlim(1, 1);
+    private volatile bool _isStarted = false;
+    public ExecutionEngine(ILogger<ExecutionEngine> logger, int workerCount = 4, int queueCapacity = 100)
     {
         _channel = new JobChannel(queueCapacity);
         _pool = new WorkerPool(_channel, workerCount);
+        _logger = logger;
     }
-
+    /// <summary>
+    /// 入队
+    /// </summary>
+    /// <param name="job"></param>
+    /// <returns></returns>
     public async Task EnqueueAsync(Job job)
     {
+        if (!_isStarted)
+            throw new InvalidOperationException("ExecutionEngine is not started");
         await _channel.EnqueueAsync(job);
     }
 
+    // =============================
+    // 启动
+    // =============================
     public async Task StartAsync(CancellationToken token)
     {
-        await _semaphore.WaitAsync(token);
+        await _lifecycleLock.WaitAsync(token);
         try
         {
-            if (_cts != null) return;
-            _cts?.Dispose();
+            if (_isStarted) return;
+
+            _logger.LogInformation("ExecutionEngine starting...");
             _cts = CancellationTokenSource.CreateLinkedTokenSource(token);
+
+            try
+            {
+                await _pool.StartAsync(_cts.Token);
+                _isStarted = true;
+                _logger.LogInformation("ExecutionEngine started successfully.");
+            }
+            catch
+            {
+                _isStarted = false;
+                _cts.Cancel();
+                _cts.Dispose();
+                _cts = null;
+                throw;
+            }
         }
         finally
         {
-            _semaphore.Release();
+            _lifecycleLock.Release();
         }
-        await _pool.StartAsync(_cts.Token);
     }
 
+    // =============================
+    // 停止
+    // =============================
     public async Task StopAsync()
     {
-        CancellationTokenSource? ctsCopy;
+        CancellationTokenSource? localCts;
 
-        await _semaphore.WaitAsync();
+        await _lifecycleLock.WaitAsync();
         try
         {
-            if (_cts == null) return; // 未启动，直接返回
-            ctsCopy = _cts;
+            if (!_isStarted || _cts == null)
+            {
+                _logger.LogDebug("ExecutionEngine already stopped.");
+                return;
+            }
+
+            _logger.LogInformation("ExecutionEngine stopping...");
+            localCts = _cts;
             _cts = null;
+            _isStarted = false;
         }
         finally
         {
-            _semaphore.Release();
+            _lifecycleLock.Release();
         }
 
-        ctsCopy.Cancel();
-        await _pool.StopAsync();
-        ctsCopy.Dispose();
+        try
+        {
+            localCts.Cancel();
+            await _pool.StopAsync();
+            _logger.LogInformation("ExecutionEngine stopped successfully.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while stopping ExecutionEngine.");
+        }
+        finally
+        {
+            localCts.Dispose();
+        }
     }
-    public void Dispose()
+
+    // =============================
+    // 释放资源
+    // =============================
+    public async ValueTask DisposeAsync()
     {
-        _cts?.Cancel();
-        _cts?.Dispose();
+        try
+        {
+            if (_isStarted)
+                await StopAsync();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error during ExecutionEngine dispose.");
+        }
+        finally
+        {
+            _lifecycleLock.Dispose();
+            _cts?.Dispose();
+        }
     }
 }

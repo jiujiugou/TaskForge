@@ -27,8 +27,9 @@ public class JsonStorageConnection : IJobStorage
         {
             WriteIndented = true
         });
-
-        System.IO.File.WriteAllText(@"D:\Code\TaskForge\src\TaskForge.Storage.File\File", json);
+        var folder = "D:\\Code\\TaskForge\\src\\TaskForge.Storage.File";
+        var filePath = Path.Combine(folder, $"{jobId}.json");
+        System.IO.File.WriteAllTextAsync(filePath, json);
 
         return jobId;
     }
@@ -45,8 +46,8 @@ public class JsonStorageConnection : IJobStorage
         {
             return null!;
         }
-        var targetMethod = targetType.GetMethod(record.InvocationData.Method??string.Empty);
-        if(targetMethod == null)
+        var targetMethod = targetType.GetMethod(record.InvocationData.Method ?? string.Empty);
+        if (targetMethod == null)
         {
             return null!;
         }
@@ -67,7 +68,7 @@ public class JsonStorageConnection : IJobStorage
 
     public StateData GetStateData(string jobId)
     {
-        var jobData=GetJobData(jobId);
+        var jobData = GetJobData(jobId);
         if (jobData == null)
         {
             return null!;
@@ -75,7 +76,7 @@ public class JsonStorageConnection : IJobStorage
         return new StateData
         {
             Name = jobData.CurrentState,
-            Reason="",
+            Reason = "",
             Data = jobData.ParametersSnapshot?.ToDictionary(kv => kv.Key, kv => kv.Value)
         };
     }

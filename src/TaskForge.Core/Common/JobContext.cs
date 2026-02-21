@@ -11,7 +11,7 @@ public record JobContext
     public Guid JobId { get; }
 
     /// <summary>任务对象</summary>
-    public Job Job { get; }
+    public Job Job { get; set; }
 
     /// <summary>取消令牌，用于任务停止或超时控制</summary>
     public CancellationToken CancellationToken { get; init; }
@@ -28,15 +28,12 @@ public record JobContext
     /// <summary>异常信息（如果执行失败）</summary>
     public Exception? Exception { get; internal set; }
 
-    /// <summary>日志记录器，可在策略或任务中使用</summary>
-    public ILogger? Logger { get; }
 
-    public JobContext(Job job, CancellationToken cancellationToken, ILogger? logger = null)
+    public JobContext(Job job, CancellationToken cancellationToken)
     {
         Job = job ?? throw new ArgumentNullException(nameof(job));
         JobId = job.Id;
         CancellationToken = cancellationToken;
-        Logger = logger;
     }
     /// <summary>
     /// 执行任务核心方法

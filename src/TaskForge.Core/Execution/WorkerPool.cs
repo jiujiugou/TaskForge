@@ -5,6 +5,7 @@ public class WorkerPool
     private readonly List<IWorker> _workers;
     private readonly JobChannel _channel;
     private readonly int _workerCount;
+    private volatile bool _isStarted = false;
     public WorkerPool(JobChannel channel, int workerCount)
     {
         _channel = channel ?? throw new ArgumentNullException(nameof(channel));
@@ -23,6 +24,8 @@ public class WorkerPool
     /// <exception cref="OperationCanceledException">当取消令牌被触发时抛出</exception>
     public async Task StartAsync(CancellationToken token)
     {
+        if (_isStarted) return;
+        _isStarted = true;
         var tasks = _workers.Select(worker => worker.StartAsync(token));
         await Task.WhenAll(tasks);
     }
@@ -33,6 +36,8 @@ public class WorkerPool
     /// <exception cref="OperationCanceledException">当取消令牌被触发时抛出</exception>
     public async Task StopAsync()
     {
+        if (!_isStarted) return;
+        _isStarted = false;
         var tasks = _workers.Select(worker => worker.StopAsync());
         await Task.WhenAll(tasks).ConfigureAwait(false);
     }

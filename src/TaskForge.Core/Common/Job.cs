@@ -23,9 +23,9 @@ namespace TaskForge.Core
         private Func<object?, object[], object?>? _syncDelegate;
         private Func<object?, object[], Task>? _asyncDelegate;
 
-        public Job(Guid id, Type targetType, MethodInfo targetMethod, object[]? args)
+        public Job(Type targetType, MethodInfo targetMethod, object[]? args)
         {
-            Id = id;
+            Id = Guid.NewGuid();
             TargetType = targetType ?? throw new ArgumentNullException(nameof(targetType));
             TargetMethod = targetMethod ?? throw new ArgumentNullException(nameof(targetMethod));
             Args = args;
@@ -181,5 +181,38 @@ namespace TaskForge.Core
             var lambda = Expression.Lambda<Func<object?, object[], Task>>(taskCall, instanceParam, argsParam);
             return lambda.Compile();
         }
+
+        public static Job CreateExpression(Expression<Action> expression)
+        {
+            return CreateExpression(expression, null);
+        }
+        public static Job CreateExpression<T>(Expression<Action<T>> expression)
+        {
+            return CreateExpression(expression, typeof(T));
+        }
+        public static Job CreateExpression(LambdaExpression expression, Type? explicitType = null)
+        {
+            if (expression.Body is not MethodCallExpression call)
+                throw new ArgumentException("Must be method call");
+
+            var type = explicitType ?? call.Method.DeclaringType!;
+            var method = call.Method;
+
+            var args = call.Arguments
+                .Select(Evaluate)
+                .ToArray();
+
+            return new Job(type, method, args);
+        }
+
+        private static object Evaluate(Expression expression)
+        {
+            if (expression is ConstantExpression constant)
+                return constant.Value!;
+            var lambda = Expression.Lambda(expression);
+            var compiled = lambda.Compile();
+            return compiled.DynamicInvoke()!;
+        }
+
     }
 }
